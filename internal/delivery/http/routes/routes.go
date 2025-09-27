@@ -3,6 +3,7 @@ package routes
 import (
 	"EventsAPI/internal/config"
 	"EventsAPI/internal/delivery/http/handlers"
+	"EventsAPI/internal/delivery/http/middleware"
 
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
@@ -12,8 +13,8 @@ import (
 func SetupRoutes(
 	config *config.Config,
 	authHandler *handlers.AuthHandler,
-	//eventHandler *handlers.EventHandler,
-	//attendeeHandler *handlers.AttendeeHandler,
+	eventHandler *handlers.EventHandler,
+	attendeeHandler *handlers.AttendeeHandler,
 ) *gin.Engine {
 
 	if config.Server.Mode == "release" {
@@ -59,7 +60,7 @@ func SetupRoutes(
 	}
 
 	// Protected routes
-	/*protected := api.Group("")
+	protected := api.Group("")
 	protected.Use(middleware.AuthMiddleware(config))
 	{
 		// Events routes
@@ -81,7 +82,7 @@ func SetupRoutes(
 			attendees.GET("/my", attendeeHandler.GetMyRegistrations)
 			attendees.GET("/event/:eventId", attendeeHandler.GetEventAttendees)
 		}
-	}*/
+	}
 
 	return router
 }

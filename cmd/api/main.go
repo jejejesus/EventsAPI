@@ -51,21 +51,21 @@ func main() {
 
 	// Initialize repositories
 	userRepo := repositories.NewPostgresUserRepository(db)
-	/*eventRepo := repositories.NewPostgresEventRepository(db)
-	attendeeRepo := repositories.NewPostgresAttendeeRepository(db)*/
+	eventRepo := repositories.NewPostgresEventRepository(db)
+	attendeeRepo := repositories.NewPostgresAttendeeRepository(db)
 
 	// Initialize use cases
 	authUseCase := usecases.NewAuthUseCase(userRepo, config)
-	/*eventUseCase := usecases.NewEventUseCase(eventRepo, userRepo)
-	attendeeUseCase := usecases.NewAttendeeUseCase(attendeeRepo, eventRepo)*/
+	eventUseCase := usecases.NewEventUseCase(eventRepo, userRepo)
+	attendeeUseCase := usecases.NewAttendeeUseCase(attendeeRepo, eventRepo)
 
 	// Initialize handlers
 	authHandler := handlers.NewAuthHandler(authUseCase)
-	/*eventHandler := handlers.NewEventHandler(eventUseCase)
-	attendeeHandler := handlers.NewAttendeeHandler(attendeeUseCase)*/
+	eventHandler := handlers.NewEventHandler(eventUseCase)
+	attendeeHandler := handlers.NewAttendeeHandler(attendeeUseCase)
 
 	// Setup routes
-	router := routes.SetupRoutes(config, authHandler) //, eventHandler, attendeeHandler)
+	router := routes.SetupRoutes(config, authHandler, eventHandler, attendeeHandler)
 
 	// Start server
 	log.Printf("🚀 Server starting on port %s", config.Server.Port)
