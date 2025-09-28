@@ -65,8 +65,8 @@ events-api/
 ### 2. Clona el repositorio y entra al directorio
 
 ```bash
-git clone https://github.com/tu-user/events-api.git
-cd events-api
+git clone https://github.com/jejejesus/EventsAPI.git
+cd EventsAPI
 ```
 
 ### 3. Instala dependencias Go
