@@ -26,7 +26,7 @@ func NewAttendeeHandler(attendeeUseCase *usecases.AttendeeUseCase) *AttendeeHand
 // @Failure 400 {object} map[string]string
 // @Failure 401 {object} map[string]string
 // @Failure 404 {object} map[string]string
-// @Router /attendees/events/{event_id}/register [post]
+// @Router /attendees/event/{event_id}/register [post]
 
 func (h *AttendeeHandler) RegisterForEvent(c *gin.Context) {
 	eventIDStr := c.Param("event_id")
@@ -64,7 +64,7 @@ func (h *AttendeeHandler) RegisterForEvent(c *gin.Context) {
 // @Failure 400 {object} map[string]string
 // @Failure 401 {object} map[string]string
 // @Failure 404 {object} map[string]string
-// @Router /attendees/events/{event_id}/unregister [post]
+// @Router /attendees/event/{event_id}/unregister [post]
 func (h *AttendeeHandler) UnregisterFromEvent(c *gin.Context) {
 	eventIDStr := c.Param("event_id")
 	userID, exists := c.Get("userID")
@@ -97,7 +97,7 @@ func (h *AttendeeHandler) UnregisterFromEvent(c *gin.Context) {
 // @Produce json
 // @Success 200 {array} entities.EventResponse
 // @Failure 401 {object} map[string]string
-// @Router /attendees/my-registrations [get]
+// @Router /attendees/my [get]
 func (h *AttendeeHandler) GetMyRegistrations(c *gin.Context) {
 	userID, exists := c.Get("userID")
 	if !exists {
@@ -125,7 +125,7 @@ func (h *AttendeeHandler) GetMyRegistrations(c *gin.Context) {
 // @Failure 400 {object} map[string]string
 // @Failure 401 {object} map[string]string
 // @Failure 404 {object} map[string]string
-// @Router /attendees/events/{event_id}/attendees [get]
+// @Router /attendees/event/{event_id}/attendees [get]
 func (h *AttendeeHandler) GetEventAttendees(c *gin.Context) {
 	eventIDStr := c.Param("event_id")
 	_, exists := c.Get("userID")

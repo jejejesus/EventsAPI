@@ -10,6 +10,8 @@ import (
 	"EventsAPI/internal/infrastructure/database"
 	"EventsAPI/internal/infrastructure/repositories"
 	"EventsAPI/internal/usecases"
+
+	"gorm.io/gorm"
 )
 
 // @title Events API
@@ -31,31 +33,36 @@ import (
 // @in header
 // @name Authorization
 // @description Type "Bearer" followed by a space and JWT token.
+var configs *config.Config
+var db *gorm.DB
 
-func main() {
+func init() {
 	// Load configuration
-	config, err := config.LoadConfig()
+	var err error
+	configs, err = config.LoadConfig()
 	if err != nil {
 		log.Fatal("Failed to load config:", err)
 	}
 
 	// Set Swagger info
-	docs.SwaggerInfo.Host = "localhost:" + config.Server.Port
+	docs.SwaggerInfo.Host = "localhost:" + configs.Server.Port
 	docs.SwaggerInfo.BasePath = "/api/v1"
 
 	// Initialize database
-	db, err := database.NewPostgresConnection(config)
+	db, err = database.NewPostgresConnection(configs)
 	if err != nil {
 		log.Fatal("Failed to connect to database:", err)
 	}
+}
 
+func main() {
 	// Initialize repositories
 	userRepo := repositories.NewPostgresUserRepository(db)
 	eventRepo := repositories.NewPostgresEventRepository(db)
 	attendeeRepo := repositories.NewPostgresAttendeeRepository(db)
 
 	// Initialize use cases
-	authUseCase := usecases.NewAuthUseCase(userRepo, config)
+	authUseCase := usecases.NewAuthUseCase(userRepo, configs)
 	eventUseCase := usecases.NewEventUseCase(eventRepo, userRepo)
 	attendeeUseCase := usecases.NewAttendeeUseCase(attendeeRepo, eventRepo)
 
@@ -65,13 +72,13 @@ func main() {
 	attendeeHandler := handlers.NewAttendeeHandler(attendeeUseCase)
 
 	// Setup routes
-	router := routes.SetupRoutes(config, authHandler, eventHandler, attendeeHandler)
+	router := routes.SetupRoutes(configs, authHandler, eventHandler, attendeeHandler)
 
 	// Start server
-	log.Printf("🚀 Server starting on port %s", config.Server.Port)
-	log.Printf("📚 Swagger documentation available at: http://localhost:%s/swagger/index.html", config.Server.Port)
+	log.Printf("🚀 Server starting on port %s", configs.Server.Port)
+	log.Printf("📚 Swagger documentation available at: http://localhost:%s/swagger/index.html", configs.Server.Port)
 
-	if err := router.Run(":" + config.Server.Port); err != nil {
+	if err := router.Run(":" + configs.Server.Port); err != nil {
 		log.Fatal("Failed to start server:", err)
 	}
 }

@@ -77,10 +77,10 @@ func SetupRoutes(
 		// Attendees routes
 		attendees := protected.Group("/attendees")
 		{
-			attendees.POST("", attendeeHandler.RegisterForEvent)
-			attendees.DELETE("/:eventId", attendeeHandler.UnregisterFromEvent)
+			attendees.POST("/event/:eventId/register", attendeeHandler.RegisterForEvent)
+			attendees.DELETE("/event/:eventId/unregister", attendeeHandler.UnregisterFromEvent)
 			attendees.GET("/my", attendeeHandler.GetMyRegistrations)
-			attendees.GET("/event/:eventId", attendeeHandler.GetEventAttendees)
+			attendees.GET("/event/:eventId/attendees", attendeeHandler.GetEventAttendees)
 		}
 	}
 
