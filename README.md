@@ -15,7 +15,6 @@ API RESTful para gestión de eventos y asistentes
 - [Ejecutar la API](#ejecutar-la-api)
 - [Swagger & Documentación](#swagger--documentación)
 - [Endpoints Principales](#endpoints-principales)
-- [Agradecimientos & Inspiración](#agradecimientos--inspiración)
 
 ---
 

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"EventsAPI/internal/usecases"
+	"fmt"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -21,21 +22,22 @@ func NewAttendeeHandler(attendeeUseCase *usecases.AttendeeUseCase) *AttendeeHand
 // @Tags attendees
 // @Accept json
 // @Produce json
-// @Param event_id path string true "Event ID"
+// @Param eventId path string true "Event ID"
 // @Success 200 {object} map[string]string
 // @Failure 400 {object} map[string]string
 // @Failure 401 {object} map[string]string
 // @Failure 404 {object} map[string]string
-// @Router /attendees/event/{event_id}/register [post]
+// @Router /attendees/register/{eventId} [post]
 
 func (h *AttendeeHandler) RegisterForEvent(c *gin.Context) {
-	eventIDStr := c.Param("event_id")
+	eventIDStr := c.Param("eventId")
 	userID, exists := c.Get("userID")
 	if !exists {
 		c.JSON(401, gin.H{"error": "Unauthorized"})
 		return
 	}
-
+	fmt.Println("UserID:", userID)
+	fmt.Println("EventID:", eventIDStr)
 	// Convert eventID from string to uint
 	eventIDUint, err := strconv.ParseUint(eventIDStr, 10, 64)
 	if err != nil {
@@ -50,7 +52,6 @@ func (h *AttendeeHandler) RegisterForEvent(c *gin.Context) {
 	}
 
 	c.JSON(200, gin.H{"message": "Registered for event successfully"})
-	c.JSON(200, gin.H{"message": "Registered for event successfully"})
 }
 
 // UnregisterFromEvent godoc
@@ -59,14 +60,14 @@ func (h *AttendeeHandler) RegisterForEvent(c *gin.Context) {
 // @Tags attendees
 // @Accept json
 // @Produce json
-// @Param event_id path string true "Event ID"
+// @Param eventId path string true "Event ID"
 // @Success 200 {object} map[string]string
 // @Failure 400 {object} map[string]string
 // @Failure 401 {object} map[string]string
 // @Failure 404 {object} map[string]string
-// @Router /attendees/event/{event_id}/unregister [post]
+// @Router /attendees/unregister/{eventId} [post]
 func (h *AttendeeHandler) UnregisterFromEvent(c *gin.Context) {
-	eventIDStr := c.Param("event_id")
+	eventIDStr := c.Param("eventId")
 	userID, exists := c.Get("userID")
 	if !exists {
 		c.JSON(401, gin.H{"error": "Unauthorized"})
@@ -120,14 +121,14 @@ func (h *AttendeeHandler) GetMyRegistrations(c *gin.Context) {
 // @Tags attendees
 // @Accept json
 // @Produce json
-// @Param event_id path string true "Event ID"
+// @Param eventId path string true "Event ID"
 // @Success 200 {array} entities.UserResponse
 // @Failure 400 {object} map[string]string
 // @Failure 401 {object} map[string]string
 // @Failure 404 {object} map[string]string
-// @Router /attendees/event/{event_id}/attendees [get]
+// @Router /attendees/event/{eventId} [get]
 func (h *AttendeeHandler) GetEventAttendees(c *gin.Context) {
-	eventIDStr := c.Param("event_id")
+	eventIDStr := c.Param("eventId")
 	_, exists := c.Get("userID")
 	if !exists {
 		c.JSON(401, gin.H{"error": "Unauthorized"})

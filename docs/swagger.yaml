@@ -93,7 +93,7 @@ info:
   title: Events API
   version: "1.0"
 paths:
-  /attendees/event/{event_id}/attendees:
+  /attendees/event/{eventId}:
     get:
       consumes:
       - application/json
@@ -101,7 +101,7 @@ paths:
       parameters:
       - description: Event ID
         in: path
-        name: event_id
+        name: eventId
         required: true
         type: string
       produces:
@@ -134,7 +134,31 @@ paths:
       summary: Get event attendees
       tags:
       - attendees
-  /attendees/event/{event_id}/unregister:
+  /attendees/my:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of events the authenticated user is registered
+        for
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.EventResponse'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get my event registrations
+      tags:
+      - attendees
+  /attendees/unregister/{eventId}:
     post:
       consumes:
       - application/json
@@ -142,7 +166,7 @@ paths:
       parameters:
       - description: Event ID
         in: path
-        name: event_id
+        name: eventId
         required: true
         type: string
       produces:
@@ -173,30 +197,6 @@ paths:
               type: string
             type: object
       summary: Unregister from an event
-      tags:
-      - attendees
-  /attendees/my:
-    get:
-      consumes:
-      - application/json
-      description: Retrieve a list of events the authenticated user is registered
-        for
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/entities.EventResponse'
-            type: array
-        "401":
-          description: Unauthorized
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Get my event registrations
       tags:
       - attendees
   /auth/login:
