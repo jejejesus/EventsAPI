@@ -70,9 +70,10 @@ func main() {
 	authHandler := handlers.NewAuthHandler(authUseCase)
 	eventHandler := handlers.NewEventHandler(eventUseCase)
 	attendeeHandler := handlers.NewAttendeeHandler(attendeeUseCase)
+	healthHandler := handlers.NewHealthHandler()
 
 	// Setup routes
-	router := routes.SetupRoutes(configs, authHandler, eventHandler, attendeeHandler)
+	router := routes.SetupRoutes(configs, authHandler, eventHandler, attendeeHandler, healthHandler)
 
 	// Start server
 	log.Printf("🚀 Server starting on port %s", configs.Server.Port)

@@ -15,6 +15,7 @@ func SetupRoutes(
 	authHandler *handlers.AuthHandler,
 	eventHandler *handlers.EventHandler,
 	attendeeHandler *handlers.AttendeeHandler,
+	healthHandler *handlers.HealthHandler,
 ) *gin.Engine {
 
 	if config.Server.Mode == "release" {
@@ -48,9 +49,7 @@ func SetupRoutes(
 	api := router.Group("/api/v1")
 
 	// Health check
-	api.GET("/health", func(c *gin.Context) {
-		c.JSON(200, gin.H{"status": "ok", "message": "Events API is running"})
-	})
+	api.GET("/health", healthHandler.HealthCheck)
 
 	// Auth routes (public)
 	auth := api.Group("/auth")
@@ -68,10 +67,10 @@ func SetupRoutes(
 		{
 			events.POST("", eventHandler.CreateEvent)
 			events.GET("", eventHandler.ListEvents)
+			events.GET("/my", eventHandler.GetMyEvents)
 			events.GET("/:id", eventHandler.GetEvent)
 			events.PUT("/:id", eventHandler.UpdateEvent)
 			events.DELETE("/:id", eventHandler.DeleteEvent)
-			events.GET("/my", eventHandler.GetMyEvents)
 		}
 
 		// Attendees routes
